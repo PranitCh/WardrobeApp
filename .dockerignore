@@ -1,0 +1,6 @@
+wardrobe/ai/
+*.pt
+*.pth
+*.onnx
+__pycache__/
+venv/

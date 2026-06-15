@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+    }
+
+    .dashboard-title h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .dashboard-title p {
+        margin: 6px 0 0;
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    .upload-btn {
+        background: #111827;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s ease;
+        display: inline-block;
+    }
+
+    .upload-btn:hover {
+        background: #1f2937;
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .item-count {
+        font-size: 0.9rem;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 6px 12px;
+        border-radius: 999px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 20px;
+    }
+
+    .card {
+        background: #f8fafc;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: 0.2s ease;
+        padding: 14px;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .card img {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        display: block;
+        background: white;
+        padding: 12px;
+    }
+
+    .card-body {
+        padding: 14px;
+        text-align: center;
+    }
+
+    .item-label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 10px;
+    }
+
+    .delete-btn {
+        width: 100%;
+        border: none;
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .delete-btn:hover {
+        background: #fecaca;
+    }
+
+    .empty-state {
+        padding: 22px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        text-align: center;
+        color: #64748b;
+        background: #f8fafc;
+    }
+
+    .generator-card {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: white;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+    }
+
+    .generator-card h3 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 1.6rem;
+        font-weight: 800;
+    }
+
+    .generator-card p {
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .generator-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .generator-form select {
+        min-width: 180px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: none;
+        outline: none;
+        font-weight: 500;
+    }
+
+    .generate-btn {
+        border: none;
+        background: white;
+        color: #0f172a;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .generate-btn:hover {
+        transform: translateY(-2px);
+        background: #e2e8f0;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-title h1 {
+            font-size: 1.8rem;
+        }
+
+        .card img {
+            height: 170px;
+        }
+
+        .generator-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .generator-form select,
+        .generate-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="dashboard-header">
+    <div class="dashboard-title">
+        <h1>Your Wardrobe</h1>
+        <p>Manage your clothes and generate AI-powered outfit combinations.</p>
+    </div>
+    <a href="{% url 'upload_clothing' %}" class="upload-btn">Upload New Item</a>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Tops</h3>
+        <span class="item-count">{{ tops|length }} item{{ tops|length|pluralize }}</span>
+    </div>
+
+    <div class="grid">
+        {% for item in tops %}
+            <div class="card">
+                <img src="{% if item.preview_image %}{{ item.preview_image.url }}{% else %}{{ item.image.url }}{% endif %}" alt="Top item">
+                <div class="card-body">
+                    <div class="item-label">
+                        {{ item.material|default:"Material not detected" }}
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">
+                        {{ item.breathability|default:"-" }} • {{ item.weight|default:"-" }}
+                    </div>
+
+                    <form method="post" action="{% url 'delete_clothing' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                No tops uploaded yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Bottoms</h3>
+        <span class="item-count">{{ bottoms|length }} item{{ bottoms|length|pluralize }}</span>
+    </div>
+
+    <div class="grid">
+        {% for item in bottoms %}
+            <div class="card">
+                <img src="{% if item.preview_image %}{{ item.preview_image.url }}{% else %}{{ item.image.url }}{% endif %}" alt="Bottom item">
+                <div class="card-body">
+                    <div class="item-label">
+                        {{ item.material|default:"Material not detected" }}
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">
+                        {{ item.breathability|default:"-" }} • {{ item.weight|default:"-" }}
+                    </div>
+
+                    <form method="post" action="{% url 'delete_clothing' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                No bottoms uploaded yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Shoes</h3>
+        <span class="item-count">{{ shoes|length }} item{{ shoes|length|pluralize }}</span>
+    </div>
+
+    <div class="grid">
+        {% for item in shoes %}
+            <div class="card">
+                <img src="{{ item.image.url }}" alt="Shoe item">
+                <div class="card-body">
+                    <form method="post" action="{% url 'delete_clothing' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                No shoes uploaded yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="generator-card">
+    <h3>Generate an Outfit</h3>
+    <p>Pick a style and let the AI create matching combinations from your wardrobe.</p>
+
+    <form method="GET" action="{% url 'generate_outfit' %}" class="generator-form">
+        <select name="style">
+            <option value="casual">Casual</option>
+            <option value="formal">Formal</option>
+            <option value="sporty">Sporty</option>
+        </select>
+        <button type="submit" class="generate-btn">Generate Outfit</button>
+    </form>
+</div>
+{% endblock %}
