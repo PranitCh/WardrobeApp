@@ -1,5 +1,6 @@
 import os
-
+import cv2
+import numpy as np
 from django.conf import settings
 
 from wardrobe.ai.models.color_extractor import ColorExtractor
@@ -43,7 +44,7 @@ class ClothingService:
         preview_path = os.path.join(preview_dir, preview_filename)
 
         if mask is not None:
-            import cv2
+            mask = mask.astype(np.uint8) * 255
             cv2.imwrite(preview_path, mask)
 
             item.preview_image = f"previews/{preview_filename}"
