@@ -1,11 +1,9 @@
 FROM python:3.13-slim
 
-WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# system deps (minimal backend only)
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
 COPY backend-requirements.txt .
 

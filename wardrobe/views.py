@@ -13,6 +13,7 @@ from wardrobe.ai.services.clothing_service import ClothingService
 from wardrobe.ai.services.weather_service import WeatherService
 from wardrobe.ai.services.outfit_generator_service import OutfitGenerationService
 from wardrobe.ai.services.rating_service import RatingService
+from wardrobe.ai.style_options import STYLE_OPTIONS
 
 # Create your views here.
 
@@ -33,10 +34,38 @@ def home(request):
 @login_required
 def upload_clothing(request):
     if request.method == "POST":
+        if request.POST.get("action") == "confirm_styles":
+            item_ids = request.POST.getlist("item_ids")
+            items = ClothingItem.objects.filter(
+                id__in=item_ids,
+                user=request.user,
+            )
+
+            try:
+                for item in items:
+                    selected_styles = request.POST.getlist(
+                        f"styles_{item.id}"
+                    )
+                    ClothingService.apply_user_style_choices(
+                        item,
+                        selected_styles,
+                    )
+
+                messages.success(
+                    request,
+                    "Saved your style choices for the uploaded item(s).",
+                )
+
+            except ValueError as e:
+                messages.error(request, str(e))
+                return redirect("upload_clothing")
+
+            return redirect("dashboard")
 
         category = request.POST.get("category")
         subcategory = request.POST.get("subcategory")
         images = request.FILES.getlist("images")
+        uploaded_items = []
 
         for image in images:
 
@@ -57,13 +86,45 @@ def upload_clothing(request):
 
                 )
 
-        print("Processing:", item.id)
-        ClothingService.process_item(item)
-        print("Done:", item.id)
+            suggested_style = ClothingService.get_suggested_style(item)
+            selected_styles = []
+
+            if suggested_style:
+                selected_styles.append(suggested_style["slug"])
+            else:
+                selected_styles.append("casual")
+
+            uploaded_items.append(
+                {
+                    "item": item,
+                    "suggested_style": suggested_style,
+                    "selected_styles": selected_styles,
+                    "ranked_styles": ClothingService.get_ranked_styles(
+                        item,
+                        limit=3,
+                    ),
+                }
+            )
+
+        if uploaded_items:
+            return render(
+                request,
+                "upload.html",
+                {
+                    "style_options": STYLE_OPTIONS,
+                    "style_confirmation_items": uploaded_items,
+                },
+            )
 
         return redirect("dashboard")
 
-    return render(request, "upload.html")
+    return render(
+        request,
+        "upload.html",
+        {
+            "style_options": STYLE_OPTIONS,
+        },
+    )
 
 @login_required
 def dashboard(request):
@@ -74,7 +135,8 @@ def dashboard(request):
     return render(request, 'dashboard.html', {
         'tops': tops,
         'bottoms': bottoms,
-        'shoes': shoes
+        'shoes': shoes,
+        'style_options': STYLE_OPTIONS,
     })
 
 @login_required
@@ -127,6 +189,12 @@ def generate_outfit(request):
     start = time.time()
 
     style = request.GET.get("style", "casual")
+    style_label = OutfitGenerationService.get_style_label(style)
+    try:
+        limit = int(request.GET.get("limit", 10))
+    except (TypeError, ValueError):
+        limit = 10
+    limit = max(1, limit)
 
     weather = None
     weather_profile = None
@@ -135,18 +203,27 @@ def generate_outfit(request):
     lon = request.GET.get("lon")
 
     if lat and lon:
-        weather = WeatherService.get_weather(lat, lon)
-        weather_profile = WeatherService.get_weather_profile(weather)
+        try:
+            weather = WeatherService.get_weather(lat, lon)
+            weather_profile = WeatherService.get_weather_profile(weather)
+        except Exception as e:
+            messages.warning(
+                request,
+                f"Weather unavailable: {e}",
+            )
 
     try:
         outfits, has_more = OutfitGenerationService.generate_outfits(
             user=request.user,
             style=style,
-            weather_profile=weather_profile
+            weather_profile=weather_profile,
+            limit=limit,
         )
-    except Exception as e:
-        messages.error(request, str(e))
-        return redirect("dashboard")
+        error = None
+    except ValueError as e:
+        outfits = []
+        has_more = False
+        error = str(e)
     
     print(
         f"TOTAL generate_outfit: {time.time() - start:.2f}s"
@@ -158,8 +235,14 @@ def generate_outfit(request):
         {
             "outfits": outfits,
             "style": style,
+            "style_label": style_label,
+            "style_options": STYLE_OPTIONS,
             "weather": weather,
             "has_more": has_more,
+            "next_limit": limit + 10,
+            "error": error,
+            "lat": lat,
+            "lon": lon,
         }
     )
 

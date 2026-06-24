@@ -6,16 +6,17 @@
     .upload-container {
         max-width: 600px;
         margin: auto;
-        background: white;
+        background: var(--surface);
         padding: 28px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
     }
 
     .upload-container h2 {
         margin-bottom: 20px;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text);
     }
 
     .form-group {
@@ -26,30 +27,30 @@
         font-weight: 600;
         display: block;
         margin-bottom: 6px;
-        color: #334155;
+        color: var(--text);
     }
 
     select,
     input[type="file"] {
         width: 100%;
         padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid #cbd5e1;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
         outline: none;
         font-size: 0.95rem;
     }
 
     select:focus,
     input:focus {
-        border-color: #0f172a;
+        border-color: var(--accent);
     }
 
     .upload-btn {
         width: 100%;
-        background: #0f172a;
-        color: white;
+        background: var(--primary);
+        color: var(--primary-text);
         padding: 12px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         border: none;
         font-weight: 700;
         cursor: pointer;
@@ -57,7 +58,7 @@
     }
 
     .upload-btn:hover {
-        background: #1e293b;
+        background: var(--primary-hover);
         transform: translateY(-2px);
     }
 
@@ -65,12 +66,164 @@
         display: inline-block;
         margin-top: 14px;
         text-decoration: none;
-        color: #0f172a;
+        color: var(--text);
         font-weight: 600;
     }
 
     .back-btn:hover {
         text-decoration: underline;
+    }
+
+    .style-confirmation-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(15, 23, 42, 0.58);
+    }
+
+    .style-confirmation-panel {
+        width: min(720px, 100%);
+        max-height: min(760px, 92vh);
+        overflow: auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+    }
+
+    .style-confirmation-panel h3 {
+        margin: 0 0 8px;
+        color: var(--text);
+        font-size: 1.35rem;
+        font-weight: 800;
+    }
+
+    .style-confirmation-panel p {
+        color: var(--muted);
+        margin-bottom: 18px;
+    }
+
+    .style-confirmation-item {
+        display: grid;
+        grid-template-columns: 112px 1fr;
+        gap: 18px;
+        padding: 16px 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .style-confirmation-item:first-of-type {
+        border-top: none;
+        padding-top: 0;
+    }
+
+    .style-confirmation-item img {
+        width: 112px;
+        height: 112px;
+        object-fit: cover;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--background);
+    }
+
+    .style-suggestion {
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .style-scores {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .style-score {
+        padding: 6px 8px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
+    .style-choice-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 8px;
+    }
+
+    .style-choice {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .style-choice:has(input:checked) {
+        border-color: var(--accent);
+        background: var(--background);
+    }
+
+    .style-choice:has(input:disabled) {
+        opacity: 0.52;
+        cursor: not-allowed;
+    }
+
+    .style-choice input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--accent);
+    }
+
+    .style-confirmation-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .style-confirmation-actions .upload-btn {
+        flex: 1;
+    }
+
+    .secondary-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    @media (max-width: 620px) {
+        .style-confirmation-item {
+            grid-template-columns: 1fr;
+        }
+
+        .style-confirmation-item img {
+            width: 100%;
+            height: 180px;
+        }
+
+        .style-confirmation-actions {
+            flex-direction: column;
+        }
     }
 </style>
 
@@ -107,6 +260,68 @@
 
     <a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
 </div>
+
+{% if style_confirmation_items %}
+    <div class="style-confirmation-backdrop" role="dialog" aria-modal="true" aria-labelledby="style-confirmation-title">
+        <div class="style-confirmation-panel">
+            <h3 id="style-confirmation-title">Here's what we think</h3>
+            <p>Review the AI style guesses and select up to 3 styles for each uploaded item.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="confirm_styles">
+
+                {% for upload in style_confirmation_items %}
+                    <div class="style-confirmation-item">
+                        <img src="{{ upload.item.image.url }}" alt="{{ upload.item.get_subcategory_display }}">
+
+                        <div>
+                            <input type="hidden" name="item_ids" value="{{ upload.item.id }}">
+
+                            <div class="style-suggestion">
+                                {% if upload.suggested_style %}
+                                    We think this is {{ upload.suggested_style.label }}.
+                                {% else %}
+                                    We could not confidently pick a style.
+                                {% endif %}
+                            </div>
+
+                            {% if upload.ranked_styles %}
+                                <div class="style-scores" aria-label="Top AI style matches">
+                                    {% for style in upload.ranked_styles %}
+                                        <span class="style-score">
+                                            {{ style.label }} {{ style.score|floatformat:2 }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <label>Styles</label>
+                            <div class="style-choice-grid" data-style-limit="3">
+                                {% for value, label in style_options %}
+                                    <label class="style-choice">
+                                        <input
+                                            type="checkbox"
+                                            name="styles_{{ upload.item.id }}"
+                                            value="{{ value }}"
+                                            {% if value in upload.selected_styles %}checked{% endif %}
+                                        >
+                                        <span>{{ label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="style-confirmation-actions">
+                    <button type="submit" class="upload-btn">Save Style Choices</button>
+                    <a href="{% url 'dashboard' %}" class="secondary-btn">Skip for Now</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}
 
 <script>
     const subcategoryMap = {
@@ -151,6 +366,43 @@
             subcategorySelect.appendChild(option);
         });
     });
+
+    document.querySelectorAll("[data-style-limit]").forEach(function (group) {
+        const limit = Number(group.dataset.styleLimit);
+        const checkboxes = Array.from(group.querySelectorAll("input[type='checkbox']"));
+
+        function syncChoices() {
+            const checkedCount = checkboxes.filter(function (checkbox) {
+                return checkbox.checked;
+            }).length;
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.disabled = !checkbox.checked && checkedCount >= limit;
+            });
+        }
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", syncChoices);
+        });
+
+        syncChoices();
+    });
+
+    const styleConfirmationForm = document.querySelector(".style-confirmation-panel form");
+
+    if (styleConfirmationForm) {
+        styleConfirmationForm.addEventListener("submit", function (event) {
+            const groups = Array.from(document.querySelectorAll("[data-style-limit]"));
+            const hasEmptyGroup = groups.some(function (group) {
+                return !group.querySelector("input[type='checkbox']:checked");
+            });
+
+            if (hasEmptyGroup) {
+                event.preventDefault();
+                alert("Select at least one style for each item.");
+            }
+        });
+    }
 </script>
 
 {% endblock %}

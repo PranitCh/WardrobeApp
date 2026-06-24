@@ -2,6 +2,21 @@ from collections import defaultdict
 from wardrobe.models import OutfitRating, UserPreference
 
 class PreferenceService:
+    @staticmethod
+    def _normalize_key(value):
+        if not value:
+            return None
+        return str(value).strip().lower()
+
+    @staticmethod
+    def _item_color_key(item):
+        if item.color_names:
+            return PreferenceService._normalize_key(item.color_names[0])
+
+        if item.dominant_colors:
+            return str(item.dominant_colors[0])
+
+        return None
 
     @staticmethod
     def build_style_preferences(user):
@@ -11,9 +26,26 @@ class PreferenceService:
 
         styles = defaultdict(list)
         for rating in ratings:
-            styles[rating.style].append(
+            outfit_style = PreferenceService._normalize_key(rating.style)
+            styles[outfit_style].append(
                 rating.user_rating
             )
+            styles[f"outfit:{outfit_style}"].append(
+                rating.user_rating
+            )
+
+            for item in [
+                rating.top_item,
+                rating.bottom_item,
+                rating.shoe_item,
+            ]:
+                if item and item.subcategory:
+                    item_style = PreferenceService._normalize_key(
+                        item.subcategory
+                    )
+                    styles[f"item:{item_style}"].append(
+                        rating.user_rating
+                    )
 
         result = {}
 
@@ -31,29 +63,30 @@ class PreferenceService:
         colors = defaultdict(list)
 
         for rating in ratings:
-            if rating.top_item.dominant_colors:
-                top_color = str(
-                    rating.top_item.dominant_colors[0]
-                )
+            top_color = PreferenceService._item_color_key(
+                rating.top_item
+            )
+            if top_color:
                 colors[top_color].append(
                     rating.user_rating
                 )
 
-            if rating.bottom_item.dominant_colors:
-                bottom_color = str(
-                    rating.bottom_item.dominant_colors[0]
-                )
+            bottom_color = PreferenceService._item_color_key(
+                rating.bottom_item
+            )
+            if bottom_color:
                 colors[bottom_color].append(
                     rating.user_rating
                 )
 
-            if rating.shoe_item.dominant_colors:
-                shoe_color = str(
-                    rating.shoe_item.dominant_colors[0]
+            if rating.shoe_item:
+                shoe_color = PreferenceService._item_color_key(
+                    rating.shoe_item
                 )
-                colors[shoe_color].append(
-                    rating.user_rating
-                )
+                if shoe_color:
+                    colors[shoe_color].append(
+                        rating.user_rating
+                    )
 
         result = {}
         for color, values in colors.items():
@@ -75,17 +108,26 @@ class PreferenceService:
         for rating in ratings:
 
             if rating.top_item.material:
-                materials[rating.top_item.material].append(
+                material = PreferenceService._normalize_key(
+                    rating.top_item.material
+                )
+                materials[material].append(
                     rating.user_rating
                 )
 
             if rating.bottom_item.material:
-                materials[rating.bottom_item.material].append(
+                material = PreferenceService._normalize_key(
+                    rating.bottom_item.material
+                )
+                materials[material].append(
                     rating.user_rating
                 )
 
             if rating.shoe_item and rating.shoe_item.material:
-                materials[rating.shoe_item.material].append(
+                material = PreferenceService._normalize_key(
+                    rating.shoe_item.material
+                )
+                materials[material].append(
                     rating.user_rating
                 )
 
@@ -152,10 +194,29 @@ class PreferenceService:
         color_prefs = preferences.color_preferences or {}
 
         # Style preference
-        style_score = style_prefs.get(style)
+        style_key = PreferenceService._normalize_key(style)
+        style_score = (
+            style_prefs.get(style_key)
+            or style_prefs.get(f"outfit:{style_key}")
+        )
 
         if style_score is not None:
             bonus += normalize(style_score) * 0.15
+
+        # Item style preference (subcategory, such as jeans/hoodie/shirt)
+        for item in [top_item, bottom_item, shoe_item]:
+
+            if item and item.subcategory:
+
+                item_style = PreferenceService._normalize_key(
+                    item.subcategory
+                )
+                item_style_score = style_prefs.get(
+                    f"item:{item_style}"
+                )
+
+                if item_style_score is not None:
+                    bonus += normalize(item_style_score) * 0.05
 
         # Material preference
         for item in [top_item, bottom_item, shoe_item]:
@@ -163,7 +224,7 @@ class PreferenceService:
             if item and item.material:
 
                 material_score = material_prefs.get(
-                    item.material
+                    PreferenceService._normalize_key(item.material)
                 )
 
                 if material_score is not None:
@@ -172,20 +233,13 @@ class PreferenceService:
         # Color preference
         for item in [top_item, bottom_item, shoe_item]:
 
-            if (
-                item
-                and item.dominant_colors
-                and len(item.dominant_colors) > 0
-            ):
-                dominant_color = str(
-                    item.dominant_colors[0]
-                )
-
+            if item:
+                color_key = PreferenceService._item_color_key(item)
                 color_score = color_prefs.get(
-                    dominant_color
+                    color_key
                 )
 
                 if color_score is not None:
-                    bonus += normalize(color_score) * 0.03
+                    bonus += normalize(color_score) * 0.06
 
         return bonus

@@ -40,8 +40,10 @@ class ClothingItem(models.Model):
     breathability = models.CharField(max_length=20, blank=True, null=True)
     weight = models.CharField(max_length=20, blank=True, null=True)
     dominant_colors = models.JSONField(null=True, blank=True)
+    color_names = models.JSONField(null=True, blank=True)
     color_percentages = models.JSONField(null=True, blank=True)
     histogram = models.JSONField(null=True, blank=True)
+    style_scores = models.JSONField(default=dict, blank=True)
 
     ai_processed = models.BooleanField(default=False)
 
@@ -61,7 +63,7 @@ class OutfitRating(models.Model):
         unique_together = ("top_item", "bottom_item", "shoe_item", "style")
 
 class UserPreference(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     color_preferences = models.JSONField(default=dict, blank=True)
     material_preferences = models.JSONField(default=dict, blank=True)
     style_preferences = models.JSONField(default=dict, blank=True)

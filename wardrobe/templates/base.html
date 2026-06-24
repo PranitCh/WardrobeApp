@@ -3,50 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wardrobe App</title>
+    <title>WardrobeAI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f7fb;
+            --surface: #ffffff;
+            --surface-soft: #f1f5f9;
+            --surface-muted: #e8edf3;
+            --text: #121826;
+            --muted: #5f6c7b;
+            --border: #d9e0ea;
+            --primary: #111827;
+            --primary-hover: #253044;
+            --primary-text: #ffffff;
+            --accent: #0f766e;
+            --accent-soft: #d9f2ee;
+            --danger: #b4233a;
+            --danger-soft: #fff1f3;
+            --success: #166534;
+            --success-soft: #dcfce7;
+            --info: #155e75;
+            --info-soft: #e6fbff;
+            --shadow: 0 14px 34px rgba(18, 24, 38, 0.08);
+            --radius: 8px;
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #0d1117;
+            --surface: #151b23;
+            --surface-soft: #1d2530;
+            --surface-muted: #293343;
+            --text: #e6edf3;
+            --muted: #98a6b3;
+            --border: #2f3b4c;
+            --primary: #dbe7f3;
+            --primary-hover: #ffffff;
+            --primary-text: #111827;
+            --accent: #2dd4bf;
+            --accent-soft: #113a37;
+            --danger: #fb7185;
+            --danger-soft: #3f1821;
+            --success: #86efac;
+            --success-soft: #173522;
+            --info: #67e8f9;
+            --info-soft: #12323a;
+            --shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #f8fafc;
-            color: #0f172a;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
             font-family: Arial, sans-serif;
         }
 
+        a {
+            color: inherit;
+        }
+
         .navbar-custom {
-            background: #111827;
-            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: color-mix(in srgb, var(--surface) 92%, transparent);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
         }
 
-        .navbar-custom .navbar-brand,
-        .navbar-custom .nav-link {
-            color: white !important;
-            font-weight: 600;
+        .nav-wrap {
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
         }
 
-        .navbar-custom .nav-link:hover {
-            color: #cbd5e1 !important;
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 800;
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 8px;
+            background: var(--primary);
+            color: var(--primary-text);
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link-custom,
+        .nav-button {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            padding: 8px 12px;
+            text-decoration: none;
+            font-size: 0.94rem;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+        }
+
+        .nav-link-custom:hover,
+        .nav-button:hover {
+            background: var(--surface-soft);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .nav-link-primary {
+            background: var(--primary);
+            color: var(--primary-text);
+            border-color: var(--primary);
+        }
+
+        .nav-link-primary:hover {
+            background: var(--primary-hover);
+            color: var(--primary-text);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        .logout-form {
+            display: inline-flex;
+            margin: 0;
         }
 
         .main-container {
             padding-top: 30px;
-            padding-bottom: 40px;
+            padding-bottom: 44px;
+        }
+
+        input,
+        select,
+        textarea {
+            background: var(--surface);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        @media (max-width: 720px) {
+            .nav-wrap {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 14px 0;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .nav-link-custom,
+            .nav-button {
+                flex: 1 1 auto;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">WardrobeAI</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
-                <a class="nav-link" href="{% url 'upload_clothing' %}">Upload</a>
-                <a class="nav-link" href="{% url 'generate_outfit' %}?style=casual">Generate</a>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("wardrobe-theme");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            const theme = savedTheme || (prefersDark ? "dark" : "light");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+
+    <nav class="navbar-custom">
+        <div class="container nav-wrap">
+            <a class="brand-link" href="{% url 'dashboard' %}">
+                <span class="brand-mark">W</span>
+                <span>WardrobeAI</span>
+            </a>
+
+            <div class="nav-actions">
+                <button type="button" class="nav-button theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                    <span id="theme-icon">☾</span>
+                </button>
+
+                {% if user.is_authenticated %}
+                    <a class="nav-link-custom" href="{% url 'dashboard' %}">Home</a>
+                    <a class="nav-link-custom" href="{% url 'upload_clothing' %}">Upload</a>
+                    <a class="nav-link-custom nav-link-primary" href="{% url 'generate_outfit' %}?style=casual">Generate</a>
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-button">Logout</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link-custom" href="{% url 'login' %}">Login</a>
+                    <a class="nav-link-custom nav-link-primary" href="{% url 'signup' %}">Sign Up</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <div class="container main-container">
+    <main class="container main-container">
         {% block content %}{% endblock %}
-    </div>
+    </main>
+
+    <script>
+        (function () {
+            const button = document.getElementById("theme-toggle");
+            const icon = document.getElementById("theme-icon");
+
+            function syncIcon() {
+                const isDark = document.documentElement.dataset.theme === "dark";
+                icon.textContent = isDark ? "☀" : "☾";
+            }
+
+            button.addEventListener("click", function () {
+                const current = document.documentElement.dataset.theme;
+                const next = current === "dark" ? "light" : "dark";
+                document.documentElement.dataset.theme = next;
+                localStorage.setItem("wardrobe-theme", next);
+                syncIcon();
+            });
+
+            syncIcon();
+        })();
+    </script>
 </body>
 </html>

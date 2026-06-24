@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0ggvmj7$qatg8s@q=je@8&=xwdydh&zi6ij1kp9n#ez-6pytn8'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-0ggvmj7$qatg8s@q=je@8&=xwdydh&zi6ij1kp9n#ez-6pytn8',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+    if host.strip()
+]
 
 
 # Application definition
@@ -96,16 +104,39 @@ WSGI_APPLICATION = 'wardrobe_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'wardrobe_db',
-        'USER': 'wardrobe_user',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': 5432,
+if os.environ.get('DATABASE_URL'):
+    from urllib.parse import urlparse
+
+    database_url = urlparse(os.environ['DATABASE_URL'])
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': database_url.path.lstrip('/'),
+            'USER': database_url.username or '',
+            'PASSWORD': database_url.password or '',
+            'HOST': database_url.hostname or 'localhost',
+            'PORT': database_url.port or '5432',
+        }
     }
-}
+elif os.environ.get('DB_ENGINE') == 'postgres':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'wardrobe_db'),
+            'USER': os.environ.get('DB_USER', 'wardrobe_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', '123'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

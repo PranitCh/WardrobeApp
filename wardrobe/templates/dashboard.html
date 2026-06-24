@@ -15,20 +15,20 @@
         margin: 0;
         font-size: 2.2rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text);
     }
 
     .dashboard-title p {
         margin: 6px 0 0;
-        color: #64748b;
+        color: var(--muted);
         font-size: 1rem;
     }
 
     .upload-btn {
-        background: #111827;
-        color: white;
+        background: var(--primary);
+        color: var(--primary-text);
         padding: 12px 18px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         text-decoration: none;
         font-weight: 600;
         transition: 0.2s ease;
@@ -36,17 +36,18 @@
     }
 
     .upload-btn:hover {
-        background: #1f2937;
+        background: var(--primary-hover);
         transform: translateY(-2px);
-        color: white;
+        color: var(--primary-text);
     }
 
     .section-card {
-        background: white;
-        border-radius: 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
         padding: 24px;
         margin-bottom: 28px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        box-shadow: var(--shadow);
     }
 
     .section-header {
@@ -62,15 +63,15 @@
         margin: 0;
         font-size: 1.4rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--text);
     }
 
     .item-count {
         font-size: 0.9rem;
-        color: #64748b;
-        background: #f1f5f9;
+        color: var(--muted);
+        background: var(--surface-soft);
         padding: 6px 12px;
-        border-radius: 999px;
+        border-radius: var(--radius);
     }
 
     .grid {
@@ -80,17 +81,17 @@
     }
 
     .card {
-        background: #f8fafc;
-        border-radius: 18px;
+        background: var(--surface-soft);
+        border-radius: var(--radius);
         overflow: hidden;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--border);
         transition: 0.2s ease;
         padding: 14px;
     }
 
     .card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        box-shadow: var(--shadow);
     }
 
     .card img {
@@ -98,8 +99,9 @@
         height: 220px;
         object-fit: contain;
         display: block;
-        background: white;
+        background: var(--surface);
         padding: 12px;
+        border-radius: var(--radius);
     }
 
     .card-body {
@@ -110,41 +112,49 @@
     .item-label {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #334155;
+        color: var(--text);
+        margin-bottom: 10px;
+    }
+
+    .item-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
         margin-bottom: 10px;
     }
 
     .delete-btn {
         width: 100%;
         border: none;
-        background: #fee2e2;
-        color: #b91c1c;
+        background: var(--danger-soft);
+        color: var(--danger);
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: var(--radius);
         font-weight: 600;
         cursor: pointer;
         transition: 0.2s ease;
     }
 
     .delete-btn:hover {
-        background: #fecaca;
+        filter: brightness(0.97);
     }
 
     .empty-state {
         padding: 22px;
-        border: 2px dashed #cbd5e1;
-        border-radius: 16px;
+        border: 2px dashed var(--border);
+        border-radius: var(--radius);
         text-align: center;
-        color: #64748b;
-        background: #f8fafc;
+        color: var(--muted);
+        background: var(--surface-soft);
     }
 
     .generator-card {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        color: white;
-        border-radius: 20px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--accent);
+        border-radius: var(--radius);
         padding: 28px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+        box-shadow: var(--shadow);
     }
 
     .generator-card h3 {
@@ -156,7 +166,7 @@
 
     .generator-card p {
         margin-bottom: 20px;
-        color: rgba(255, 255, 255, 0.85);
+        color: var(--muted);
     }
 
     .generator-form {
@@ -169,18 +179,18 @@
     .generator-form select {
         min-width: 180px;
         padding: 12px 14px;
-        border-radius: 12px;
-        border: none;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
         outline: none;
         font-weight: 500;
     }
 
     .generate-btn {
         border: none;
-        background: white;
-        color: #0f172a;
+        background: var(--primary);
+        color: var(--primary-text);
         padding: 12px 18px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         font-weight: 700;
         cursor: pointer;
         transition: 0.2s ease;
@@ -188,7 +198,7 @@
 
     .generate-btn:hover {
         transform: translateY(-2px);
-        background: #e2e8f0;
+        background: var(--primary-hover);
     }
 
     @media (max-width: 768px) {
@@ -235,7 +245,7 @@
                         {{ item.material|default:"Material not detected" }}
                     </div>
 
-                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">
+                    <div class="item-meta">
                         {{ item.breathability|default:"-" }} • {{ item.weight|default:"-" }}
                     </div>
 
@@ -268,7 +278,7 @@
                         {{ item.material|default:"Material not detected" }}
                     </div>
 
-                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 10px;">
+                    <div class="item-meta">
                         {{ item.breathability|default:"-" }} • {{ item.weight|default:"-" }}
                     </div>
 
@@ -297,6 +307,14 @@
             <div class="card">
                 <img src="{{ item.image.url }}" alt="Shoe item">
                 <div class="card-body">
+                    <div class="item-label">
+                        {{ item.material|default:"Material not detected" }}
+                    </div>
+
+                    <div class="item-meta">
+                        {{ item.breathability|default:"-" }} • {{ item.weight|default:"-" }}
+                    </div>
+
                     <form method="post" action="{% url 'delete_clothing' item.id %}">
                         {% csrf_token %}
                         <button type="submit" class="delete-btn">Delete</button>
@@ -317,9 +335,9 @@
 
     <form method="GET" action="{% url 'generate_outfit' %}" class="generator-form">
         <select name="style">
-            <option value="casual">Casual</option>
-            <option value="formal">Formal</option>
-            <option value="sporty">Sporty</option>
+            {% for value, label in style_options %}
+                <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
         </select>
         <button type="submit" class="generate-btn">Generate Outfit</button>
     </form>

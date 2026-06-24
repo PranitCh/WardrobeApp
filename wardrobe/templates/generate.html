@@ -15,65 +15,67 @@
         margin: 0;
         font-size: 2.1rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text);
     }
 
     .page-header p {
         margin: 6px 0 0;
-        color: #64748b;
+        color: var(--muted);
     }
 
     .back-btn {
         display: inline-block;
         padding: 12px 18px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         text-decoration: none;
         font-weight: 600;
-        background: #e2e8f0;
-        color: #0f172a;
+        background: var(--surface-soft);
+        color: var(--text);
         transition: 0.2s ease;
+        border: 1px solid var(--border);
     }
 
     .back-btn:hover {
-        background: #cbd5e1;
-        color: #0f172a;
+        background: var(--surface-muted);
+        color: var(--text);
     }
 
     .top-bar {
-        background: white;
-        border-radius: 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
         padding: 22px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        box-shadow: var(--shadow);
         margin-bottom: 24px;
     }
 
     .style-pill {
         display: inline-block;
         padding: 7px 14px;
-        border-radius: 999px;
-        background: #dbeafe;
-        color: #1d4ed8;
+        border-radius: var(--radius);
+        background: var(--accent-soft);
+        color: var(--accent);
         font-weight: 700;
         font-size: 0.9rem;
         margin-top: 10px;
     }
 
     .error-box {
-        background: #fff1f2;
-        border: 1px solid #fecdd3;
-        color: #9f1239;
+        background: var(--danger-soft);
+        border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+        color: var(--danger);
         padding: 18px;
-        border-radius: 16px;
+        border-radius: var(--radius);
         font-weight: 600;
         margin-bottom: 20px;
     }
 
     .message-box {
-        background: #ecfeff;
-        border: 1px solid #a5f3fc;
-        color: #155e75;
+        background: var(--info-soft);
+        border: 1px solid color-mix(in srgb, var(--info) 35%, transparent);
+        color: var(--info);
         padding: 14px 18px;
-        border-radius: 14px;
+        border-radius: var(--radius);
         font-weight: 600;
         margin-bottom: 18px;
     }
@@ -85,23 +87,23 @@
     }
 
     .outfit-card {
-        background: white;
-        border-radius: 20px;
+        background: var(--surface);
+        border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-        border: 1px solid #e2e8f0;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
     }
 
     .outfit-card-header {
         padding: 18px 20px 12px;
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--border);
     }
 
     .outfit-card-header h3 {
         margin: 0 0 10px;
         font-size: 1.2rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text);
     }
 
     .score-row {
@@ -114,16 +116,16 @@
 
     .score-badge {
         display: inline-block;
-        background: #dcfce7;
-        color: #166534;
+        background: var(--success-soft);
+        color: var(--success);
         padding: 7px 12px;
-        border-radius: 999px;
+        border-radius: var(--radius);
         font-size: 0.9rem;
         font-weight: 700;
     }
 
     .color-line {
-        color: #475569;
+        color: var(--muted);
         font-size: 0.95rem;
         margin-top: 12px;
         line-height: 1.5;
@@ -137,26 +139,40 @@
     }
 
     .item-box {
-        background: #f8fafc;
-        border-radius: 16px;
+        background: var(--surface-soft);
+        border-radius: var(--radius);
         padding: 12px;
         text-align: center;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--border);
     }
 
     .item-box p {
         margin: 0 0 10px;
         font-weight: 700;
-        color: #334155;
+        color: var(--text);
     }
 
     .item-box img {
         width: 100%;
         height: 180px;
         object-fit: contain;
-        border-radius: 10px;
-        background: white;
+        border-radius: var(--radius);
+        background: var(--surface);
         padding: 8px;
+    }
+
+    .item-material {
+        margin-top: 10px;
+        color: var(--text);
+        font-size: 0.86rem;
+        font-weight: 700;
+    }
+
+    .item-meta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.35;
     }
 
     .empty-shoe {
@@ -164,28 +180,28 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 10px;
-        background: white;
-        color: #94a3b8;
+        border-radius: var(--radius);
+        background: var(--surface);
+        color: var(--muted);
         font-weight: 600;
         padding: 8px;
     }
 
     .rating-section {
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--border);
         padding: 18px 20px 20px;
-        background: #fcfdff;
+        background: var(--surface);
     }
 
     .rating-title {
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text);
         margin-bottom: 10px;
     }
 
     .current-rating {
         margin-bottom: 12px;
-        color: #475569;
+        color: var(--muted);
         font-size: 0.95rem;
         font-weight: 600;
     }
@@ -198,19 +214,19 @@
     }
 
     .star-options label {
-        border: 1px solid #cbd5e1;
-        background: white;
-        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface-soft);
+        border-radius: var(--radius);
         padding: 8px 12px;
         cursor: pointer;
         font-weight: 700;
-        color: #334155;
+        color: var(--text);
         transition: 0.2s ease;
     }
 
     .star-options label:hover {
-        background: #f8fafc;
-        border-color: #94a3b8;
+        background: var(--surface-muted);
+        border-color: var(--accent);
     }
 
     .star-options input[type="radio"] {
@@ -219,10 +235,10 @@
 
     .rate-btn {
         border: none;
-        background: #0f172a;
-        color: white;
+        background: var(--primary);
+        color: var(--primary-text);
         padding: 10px 16px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         font-weight: 700;
         cursor: pointer;
         transition: 0.2s ease;
@@ -230,16 +246,18 @@
 
     .rate-btn:hover {
         transform: translateY(-1px);
-        background: #1e293b;
+        background: var(--primary-hover);
     }
 
     .regen-card {
         margin-top: 28px;
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        color: white;
-        border-radius: 20px;
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--accent);
+        border-radius: var(--radius);
         padding: 24px;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+        box-shadow: var(--shadow);
     }
 
     .regen-card h3 {
@@ -249,7 +267,7 @@
 
     .regen-card p {
         margin: 0 0 18px;
-        color: rgba(255,255,255,0.85);
+        color: var(--muted);
     }
 
     .regen-form {
@@ -261,18 +279,18 @@
     .regen-form select {
         min-width: 180px;
         padding: 12px 14px;
-        border-radius: 12px;
-        border: none;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
         outline: none;
         font-weight: 500;
     }
 
     .regen-btn {
         border: none;
-        background: white;
-        color: #0f172a;
+        background: var(--primary);
+        color: var(--primary-text);
         padding: 12px 18px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         font-weight: 700;
         cursor: pointer;
         transition: 0.2s ease;
@@ -280,7 +298,29 @@
 
     .regen-btn:hover {
         transform: translateY(-2px);
-        background: #e2e8f0;
+        background: var(--primary-hover);
+    }
+
+    .show-more-wrap {
+        margin-top: 28px;
+        text-align: center;
+    }
+
+    .show-more-btn {
+        display: inline-block;
+        padding: 12px 20px;
+        border-radius: var(--radius);
+        text-decoration: none;
+        background: var(--primary);
+        color: var(--primary-text);
+        font-weight: 700;
+        transition: 0.2s ease;
+    }
+
+    .show-more-btn:hover {
+        background: var(--primary-hover);
+        color: var(--primary-text);
+        transform: translateY(-1px);
     }
 
     @media (max-width: 768px) {
@@ -310,9 +350,9 @@
 
 <div class="page-header">
     <div>
-        <h1>Generated {{ style|title }} Outfits</h1>
+        <h1>Generated {{ style_label }} Outfits</h1>
         <p>Here are the best combinations selected from your wardrobe.</p>
-        <span class="style-pill">{{ style|title }} Style</span>
+        <span class="style-pill">{{ style_label }} Style</span>
     </div>
 
     <a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
@@ -355,17 +395,35 @@
                     <div class="item-box">
                         <p>Top</p>
                         <img src="{{ outfit.top.image.url }}" alt="Top">
+                        <div class="item-material">
+                            {{ outfit.top.material|default:"Material not detected" }}
+                        </div>
+                        <div class="item-meta">
+                            {{ outfit.top.breathability|default:"-" }} • {{ outfit.top.weight|default:"-" }}
+                        </div>
                     </div>
 
                     <div class="item-box">
                         <p>Bottom</p>
                         <img src="{{ outfit.bottom.image.url }}" alt="Bottom">
+                        <div class="item-material">
+                            {{ outfit.bottom.material|default:"Material not detected" }}
+                        </div>
+                        <div class="item-meta">
+                            {{ outfit.bottom.breathability|default:"-" }} • {{ outfit.bottom.weight|default:"-" }}
+                        </div>
                     </div>
 
                     <div class="item-box">
                         {% if outfit.shoe %}
                             <p>Shoes</p>
                             <img src="{{ outfit.shoe.image.url }}" alt="Shoes">
+                            <div class="item-material">
+                                {{ outfit.shoe.material|default:"Material not detected" }}
+                            </div>
+                            <div class="item-meta">
+                                {{ outfit.shoe.breathability|default:"-" }} • {{ outfit.shoe.weight|default:"-" }}
+                            </div>
                         {% else %}
                             <p>Shoes</p>
                             <div class="empty-shoe">Not included</div>
@@ -423,20 +481,8 @@
     </div>
 {% endif %}
 {% if has_more %}
-    <div style="margin-top: 28px; text-align: center;">
-        <a href="{% url 'generate_outfit' %}?style={{ style }}&limit={{ next_limit }}"
-           style="
-               display: inline-block;
-               padding: 12px 20px;
-               border-radius: 12px;
-               text-decoration: none;
-               background: #0f172a;
-               color: white;
-               font-weight: 700;
-               transition: 0.2s ease;
-           "
-           onmouseover="this.style.background='#1e293b'"
-           onmouseout="this.style.background='#0f172a'">
+    <div class="show-more-wrap">
+        <a class="show-more-btn" href="{% url 'generate_outfit' %}?style={{ style }}&limit={{ next_limit }}{% if lat and lon %}&lat={{ lat }}&lon={{ lon }}{% endif %}">
             Show more outfits
         </a>
     </div>
@@ -447,26 +493,35 @@
 
     <form method="get" action="{% url 'generate_outfit' %}" class="regen-form">
         <select name="style">
-            <option value="casual" {% if style == "casual" %}selected{% endif %}>Casual</option>
-            <option value="formal" {% if style == "formal" %}selected{% endif %}>Formal</option>
-            <option value="sporty" {% if style == "sporty" %}selected{% endif %}>Sporty</option>
+            {% for value, label in style_options %}
+                <option value="{{ value }}" {% if style == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
         </select>
+        {% if lat and lon %}
+            <input type="hidden" name="lat" value="{{ lat }}">
+            <input type="hidden" name="lon" value="{{ lon }}">
+        {% endif %}
         <button type="submit" class="regen-btn">Generate Again</button>
     </form>
 </div>
 
 <script>
-if (!localStorage.getItem("lat")) {
+const params = new URLSearchParams(window.location.search);
+const storedLat = localStorage.getItem("lat");
+const storedLon = localStorage.getItem("lon");
+
+if ((!params.get("lat") || !params.get("lon")) && storedLat && storedLon) {
+    params.set("lat", storedLat);
+    params.set("lon", storedLon);
+    window.location.search = params.toString();
+} else if (!storedLat || !storedLon) {
     navigator.geolocation.getCurrentPosition(function(position) {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
 
-        // store it
         localStorage.setItem("lat", lat);
         localStorage.setItem("lon", lon);
 
-        // reload page with params
-        const params = new URLSearchParams(window.location.search);
         params.set("lat", lat);
         params.set("lon", lon);
 

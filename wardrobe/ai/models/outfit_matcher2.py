@@ -52,12 +52,21 @@ class OutfitMatcher:
         }
     
     def calculate_histogram_similarity(self, hist1, hist2):
-        similarity = cv2.compareHist(
-            hist1.astype(np.float32), 
-            hist2.astype(np.float32), 
-            cv2.HISTCMP_CORREL
-        )
-        return similarity
+
+        hist1 = np.array(hist1, dtype=np.float32) if hist1 is not None else np.zeros(10)
+        hist2 = np.array(hist2, dtype=np.float32) if hist2 is not None else np.zeros(10)
+
+        # normalize safety
+        if hist1.sum() > 0:
+            hist1 = hist1 / (hist1.sum() + 1e-6)
+        if hist2.sum() > 0:
+            hist2 = hist2 / (hist2.sum() + 1e-6)
+
+        # example cosine similarity
+        dot = np.dot(hist1, hist2)
+        norm = (np.linalg.norm(hist1) * np.linalg.norm(hist2)) + 1e-6
+
+        return float(dot / norm)
     
     def are_colors_complementary(self, color1_name, color2_name):
         return color2_name in self.complementary_pairs.get(color1_name, [])
