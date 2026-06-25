@@ -2,9 +2,18 @@ import os
 
 import requests
 
-ML_BASE_URL = os.environ.get("ML_BASE_URL", "http://localhost:8001")
-ML_ANALYZE_URL = os.environ.get("ML_URL", f"{ML_BASE_URL}/analyze")
-ML_SCORE_URL = os.environ.get("ML_SCORE_URL", f"{ML_BASE_URL}/score-outfits")
+ML_BASE_URL = os.environ.get(
+    "ML_BASE_URL",
+    "http://host.docker.internal:8001",
+)
+ML_ANALYZE_URL = os.environ.get(
+    "ML_ANALYZE_URL",
+    f"{ML_BASE_URL}/analyze",
+)
+ML_SCORE_URL = os.environ.get(
+    "ML_SCORE_URL",
+    f"{ML_BASE_URL}/score-outfits",
+)
 
 
 class MLClient:
